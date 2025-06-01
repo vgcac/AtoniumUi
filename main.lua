@@ -1,5 +1,5 @@
 --// library script private
-getgenv().namehub = "Ultimate Hub"
+getgenv().namehub = "Private"
 local UserInputService = game:GetService('UserInputService')
 local LocalPlayer = game:GetService('Players').LocalPlayer
 local TweenService = game:GetService('TweenService')
@@ -1346,183 +1346,173 @@ function Library:new()
 end
 
 local main = Library.new()
-local tab = main.create_tab('Player')
+local tab = main.create_tab('Main')
 
--- 왼쪽 섹션 - 캐릭터 조작
-tab:create_title({
-    name = 'Character Mods',
-    section = 'left'
+tab.create_title({
+	name = 'AutoParry',
+	section = 'left'
 })
+tab.create_toggle({
+	name = 'Enabled',
+	flag = 'autoparry',
 
-tab:create_toggle({
-    name = 'Super Speed',
-    flag = 'speed',
-    section = 'left',
-    enabled = false,
-    callback = function(state)
-        if state then
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
-        else
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
-        end
-    end
+	section = 'left',
+	enabled = false,
+
+	callback = function(state: boolean)
+		print(`{state}`)
+	end
 })
+tab.create_dropdown({
+	name = 'Direction',
+	flag = 'Direction',
+	section = 'left',
 
-tab:create_slider({
-    name = 'Walk Speed',
-    flag = 'walkspeed',
-    section = 'left',
-    value = 16,
-    minimum_value = 16,
-    maximum_value = 500,
-    callback = function(value)
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
-    end
+	option = 'Custom',
+	options = {'Custom', 'High', 'Random'},
+
+	callback = function(value: string)
+		print(value)
+	end
 })
-
-tab:create_toggle({
-    name = 'Super Jump',
-    flag = 'jump',
-    section = 'left',
-    enabled = false,
-    callback = function(state)
-        if state then
-            game.Players.LocalPlayer.Character.Humanoid.JumpPower = 100
-        else
-            game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
-        end
-    end
+tab.create_title({
+	name = 'Visualizer',
+	section = 'right'
 })
+tab.create_toggle({
+	name = 'Enabled',
+	flag = 'visualise',
 
-tab:create_slider({
-    name = 'Jump Power',
-    flag = 'jumppower',
-    section = 'left',
-    value = 50,
-    minimum_value = 50,
-    maximum_value = 500,
-    callback = function(value)
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = value
-    end
+	section = 'right',
+	enabled = false,
+
+	callback = function(state: boolean)
+	print(`{state}`)
+	end
 })
-
--- 오른쪽 섹션 - 텔레포트 & 기타
-tab:create_title({
-    name = 'Teleports',
-    section = 'right'
+tab.create_title({
+	name = 'HitSound',
+	section = 'left'
 })
+tab.create_toggle({
+	name = 'Enabled',
+	flag = 'hitsound',
 
-tab:create_dropdown({
-    name = 'Quick Teleport',
-    flag = 'teleport_location',
-    section = 'right',
-    option = 'Select Location',
-    options = {'Spawn', 'Shop', 'Boss Room', 'Secret Area'},
-    callback = function(value)
-        local locations = {
-            ['Spawn'] = CFrame.new(0, 10, 0),
-            ['Shop'] = CFrame.new(100, 10, 100),
-            ['Boss Room'] = CFrame.new(-100, 10, -100),
-            ['Secret Area'] = CFrame.new(50, 50, 50)
-        }
-        if locations[value] then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = locations[value]
-        end
-    end
+	section = 'left',
+	enabled = false,
+
+	callback = function(state: boolean)
+		print(`{state}`)
+	end
 })
+tab.create_dropdown({
+	name = 'Sound',
+	flag = 'soundpick',
+	section = 'left',
 
-tab:create_title({
-    name = 'Character Settings',
-    section = 'right'
+	option = 'Neverlose',
+	options = {'Click', 'Neverlose', 'Bonk'},
+
+	callback = function(value: string)
+		print(value)
+	end
 })
-
-tab:create_toggle({
-    name = 'Infinite Jump',
-    flag = 'infjump',
-    section = 'right',
-    enabled = false,
-    callback = function(state)
-        local connection
-        if state then
-            connection = game:GetService("UserInputService").JumpRequest:Connect(function()
-                game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
-            end)
-        else
-            if connection then
-                connection:Disconnect()
-            end
-        end
-    end
+tab.create_title({
+	name = 'AI',
+	section = 'right'
 })
+tab.create_toggle({
+	name = 'Enabled',
+	flag = 'AI',
 
-tab:create_toggle({
-    name = 'Noclip',
-    flag = 'noclip',
-    section = 'right',
-    enabled = false,
-    callback = function(state)
-        local function updateNoclip()
-            if state then
-                for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.CanCollide = false
-                    end
-                end
-            end
-        end
-        
-        if state then
-            game:GetService("RunService").Stepped:Connect(updateNoclip)
-        end
-    end
+	section = 'right',
+	enabled = false,
+
+	callback = function(state: boolean)
+    print(`{state}`)
+	end
 })
-
--- 키바인드 섹션
-tab:create_title({
-    name = 'Keybinds',
-    section = 'right'
+tab.create_title({
+	name = 'Spin',
+	section = 'right'
 })
+tab.create_toggle({
+	name = 'Enabled',
+	flag = 'spin',
 
-tab:create_keybind({
-    name = 'Reset Character',
-    flag = 'reset_key',
-    section = 'right',
-    keycode = Enum.KeyCode.R,
-    callback = function()
-        game.Players.LocalPlayer.Character:BreakJoints()
-    end
+	section = 'right',
+	enabled = false,
+
+	callback = function(state: boolean)
+		print(`{state}`)
+	end
 })
+tab.create_slider({
+	name = 'Speed',
+	flag = 'spinspeed',
 
-tab:create_keybind({
-    name = 'Toggle Flight',
-    flag = 'flight_key',
-    section = 'right',
-    keycode = Enum.KeyCode.F,
-    callback = function()
-        local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid:ChangeState(Enum.HumanoidStateType.Flying)
-        end
-    end
+	section = 'right',
+
+	value = 25,
+	minimum_value = 0,
+	maximum_value = 100,
+
+	callback = function(value: number)
+		print(value)
+	end
 })
-
--- 텍스트박스 예시
-tab:create_title({
-    name = 'Custom Settings',
-    section = 'left'
+tab.create_title({
+	name = 'Auto Open Crate',
+	section = 'left'
 })
+tab.create_toggle({
+	name = 'Enabled',
+	flag = 'swordbox',
 
-tab:create_textbox({
-    name = 'Custom Speed',
-    flag = 'custom_speed',
-    section = 'left',
-    value = "16",
-    callback = function(text)
-        local speed = tonumber(text)
-        if speed then
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speed
-        end
-    end
+	section = 'left',
+	enabled = false,
+
+	callback = function(state: boolean)
+		print(`{state}`)
+	end
 })
+tab.create_dropdown({
+	name = 'Crate',
+	flag = 'selectbox',
+	section = 'left',
 
+	option = 'Sword Crate',
+	options = {'Explosion Crate', 'Sword Crate'},
+
+	callback = function(value: string)
+		print(value)
+	end
+})
+tab.create_title({
+	name = 'Auto Rewards',
+	section = 'right'
+})
+tab.create_toggle({
+	name = 'Enabled',
+	flag = 'rewarde',
+
+	section = 'right',
+	enabled = false,
+
+	callback = function(state: boolean)
+		print(`{state}`)
+	end
+})
+tab.create_dropdown({
+	name = 'Rewards',
+	flag = 'selectrewards',
+	section = 'right',
+
+	option = 'Playtime Rewards',
+	options = {'Playtime Rewards', 'Clan Rewards', 'Login Rewards', 'All'},
+
+	callback = function(value: string)
+	    print(value)
+	end
+})
 return library
